@@ -71,4 +71,22 @@ class Array
     end
   end
   
+  # random, switch array elements, cut selection size by moving index, trim final array 
+  def sample(n = nil)
+    return self[Kernel.rand(size)] if n.nil?
+    n = n.to_i
+  rescue Exception => e
+    raise TypeError, "Cannot convert to Integer"
+  else
+    raise(ArgumentError, "Cannot be negative number") if n < 0
+    n = size if n > size
+    results = Array.new(self)
+    n.times do |i|
+      r = i + Kernel.rand(size - i)
+      results[i], results[r] = results[r], results[i]
+    end
+    results[n..size] = []
+    results
+  end unless method_defined? :sample
+  
 end
