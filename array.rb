@@ -71,7 +71,7 @@ class Array
     end
   end
   
-  # random, switch array elements, cut selection size by moving index, trim final array 
+  # get random num, switch array elements, cut selection size by moving index, trim final array 
   def sample(n = nil)
     return self[Kernel.rand(size)] if n.nil?
     n = n.to_i
@@ -89,4 +89,26 @@ class Array
     results
   end unless method_defined? :sample
   
+  # whatever is yielded by block becomes a hash key whose value is returned if key already present
+  # if not key defined, push element into results array
+  def uniq_by
+    hash, results = {}, []
+    self.each {|element| hash[yield(element)] ||= (results << element) }
+    results
+  end
+  
+  
+  def uniq_by!
+    replace(uniq_by { |element| yield element})
+  end
+  
+  def self.wrap(object)
+    if object.nil?
+      return []
+    elsif object.respond_to?(:to_ary)
+      return object.to_ary
+    else
+      [object]
+    end
+  end
 end
